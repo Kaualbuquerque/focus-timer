@@ -1,0 +1,153 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: oklch(0.16 0.02 270);
+  --card: oklch(0.21 0.025 270);
+  --primary: oklch(0.78 0.16 75);
+  --foreground: oklch(0.97 0.01 90);
+  --muted-foreground: oklch(0.7 0.02 90);
+  --border: oklch(0.3 0.02 270);
+  --accent: oklch(0.65 0.18 25);
+  --destructive: oklch(0.6 0.22 25);
+
+  /* Shadows */
+  --shadow-glow: 0 0 60px -10px oklch(0.78 0.16 75 / 0.4);
+  --gradient-primary: linear-gradient(135deg, oklch(0.82 0.16 75), oklch(0.7 0.18 45));
+}
+
+@layer base {
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+}
+
+@layer components {
+
+  /* ============ CARDS ============ */
+  .card {
+    @apply bg-card border border-border rounded-2xl p-6 backdrop-blur-sm;
+  }
+
+  .card-timer {
+    @apply card;
+    min-height: clamp(250px, 40vh, 500px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  /* ============ BUTTONS ============ */
+  .btn-primary {
+    @apply rounded-full px-6 py-3 bg-primary text-background font-semibold transition-all duration-200 active:scale-95;
+    box-shadow: 0 8px 30px -6px oklch(0.78 0.16 75 / 0.5);
+  }
+
+  .btn-primary:hover {
+    box-shadow: 0 12px 40px -8px oklch(0.78 0.16 75 / 0.6);
+  }
+
+  .btn-secondary {
+    @apply rounded-full px-6 py-3 bg-card border border-border text-foreground font-semibold transition-all duration-200;
+  }
+
+  .btn-secondary:hover {
+    background-color: oklch(0.21 0.025 270 / 0.8);
+    border-color: oklch(0.3 0.02 270 / 0.8);
+  }
+
+  /* ============ TITLE BAR ============ */
+  .title-bar {
+    @apply flex items-center justify-between;
+    height: 40px;
+    background-color: var(--card);
+    border-bottom: 1px solid var(--border);
+    padding: 0 16px;
+    gap: 16px;
+    user-select: none;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+
+  .title-bar-left {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .title-bar-center {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--foreground);
+  }
+
+  .title-bar-right {
+    @apply flex items-center gap-1;
+  }
+
+  .title-bar-button {
+    @apply flex items-center justify-center;
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+    color: var(--muted-foreground);
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    transition: all 200ms;
+  }
+
+  .title-bar-button:hover {
+    background-color: oklch(0.3 0.02 270 / 0.5);
+    color: var(--foreground);
+  }
+
+  .title-bar-button-close:hover {
+    background-color: var(--destructive);
+    color: white;
+  }
+
+  .title-bar-button:active {
+    transform: scale(0.95);
+  }
+
+  /* ============ COLORS & BACKGROUNDS ============ */
+  .bg-primary-subtle {
+    background-color: oklch(0.78 0.16 75 / 0.15);
+  }
+
+  /* ============ ICONS ============ */
+  .icon-box {
+    @apply flex items-center justify-center w-10 h-10 rounded-xl bg-primary-subtle;
+  }
+
+  /* ============ TYPOGRAPHY ============ */
+  .timer-display {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(3rem, 12vw, 8rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    word-break: break-word;
+    overflow: hidden;
+  }
+
+  /* ============ UTILITIES ============ */
+  .p-responsive {
+    padding: clamp(1rem, 4vw, 3rem);
+  }
+
+  .glow-primary {
+    box-shadow: var(--shadow-glow);
+  }
+
+  .gradient-primary {
+    background: var(--gradient-primary);
+  }
+}
