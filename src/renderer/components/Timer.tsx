@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import { TimerState } from "../types/components"
+import { Pause, Play, RefreshCcw } from "lucide-react"
 
 export function Timer() {
     const [totalSeconds, setTotalSeconds] = useState(0)
@@ -57,38 +58,37 @@ export function Timer() {
 
 
     return (
-        <div className="card mb-8">
-            {/* Header */}
-            <div className="text-center mb-8">
-                <h2 className="text-sm uppercase tracking-wider text-gray-400 mb-4">
-                    {isRunning ? 'Esturando...' : 'Pronto para estudar'}
-                </h2>
+        <div className="flex flex-col justify-center">
 
-                {/* Timer Displey */}
-                <div className="timer-display flex items-center justify-center gap-2">
-                    <span>{time.hours}</span>
-                    <span className="text-gray-600">:</span>
-                    <span>{time.minutes}</span>
-                    <span className="text-gray-600">:</span>
-                    <span>{time.seconds}</span>
+            <div className="card-timer mb-8">
+                <div className="text-center mb-8">
+                    <h2 className="text-xs uppercase tracking-wider text-gray-400 mb-4">
+                        {isRunning ? 'Estudando...' : 'Pronto para estudar'}
+                    </h2>
+                    {/* Timer Displey */}
+                    <div className="timer-display flex items-center justify-center gap-2">
+                        <span>{time.hours}</span>
+                        <span className="text-gray-600">:</span>
+                        <span>{time.minutes}</span>
+                        <span className="text-gray-600">:</span>
+                        <span>{time.seconds}</span>
+                    </div>
                 </div>
-            </div>
-
-            {/* Controls */}
-            <div className="flex items-center justify-center gap-4">
-                {isRunning ? (
-                    <button onClick={handlePause} className="btn-primary">
-                        ⏸ Pausar
+                {/* Controls */}
+                <div className="flex items-center justify-center gap-4">
+                    {isRunning ? (
+                        <button onClick={handlePause} className="btn-primary">
+                            <Pause /> Pausar
+                        </button>
+                    ) : (
+                        <button onClick={handleStart} className="btn-primary">
+                            <Play /> Iniciar
+                        </button>
+                    )}
+                    <button onClick={handleReset} className="btn-secondary">
+                        <RefreshCcw /> Zerar
                     </button>
-                ) : (
-                    <button onClick={handleStart} className="btn-primary">
-                        ▶ Iniciar
-                    </button>
-                )}
-
-                <button onClick={handleReset} className="btn-secondary">
-                    🔄 Zerar
-                </button>
+                </div>
             </div>
         </div>
     )

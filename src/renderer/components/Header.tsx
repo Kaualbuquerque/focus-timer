@@ -16,8 +16,8 @@ export function Header({ date = new Date() }: HeaderProps) {
     }
 
     return(
-        <header className="flex items-center justify-between py-6 px-8 border-b border-border">
-            {/* Logo e Título */}
+        <header className="flex items-center justify-between py-6 px-8 border-b border-none">
+            {/* Logo and Title */}
             <div className="flex items-center gap-4">
                 <div className="icon-box">
                     <Flame size={24} className="text-primary"/>
@@ -29,7 +29,7 @@ export function Header({ date = new Date() }: HeaderProps) {
                 </div>
             </div>
 
-            {/* Data */}
+            {/* Date */}
             <time className="text-sm text-muted-foreground">
                 {formatDate(date)}
             </time>

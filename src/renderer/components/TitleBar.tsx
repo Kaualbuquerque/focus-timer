@@ -37,11 +37,11 @@ export function TitleBar() {
     return (
         <div className="title-bar" style={{ WebkitAppRegion: 'drag' } as React.CSSProperties}>
             <div className="title-bar-left">
-                {/* Espaço para logo */}
+                {/* Space for logo */}
             </div>
 
             <div className="title-bar-right">
-                {/* Minimizar */}
+                {/* Minimize */}
                 <button
                     onClick={() => window.electron.minimizeWindow()}
                     className="title-bar-button"
@@ -52,7 +52,7 @@ export function TitleBar() {
                 </button>
 
 
-                {/* Maximizar */}
+                {/* Maximize */}
                 <button
                     onClick={handleMaximize}
                     className="title-bar-button"
@@ -62,7 +62,7 @@ export function TitleBar() {
                     <Square size={16} />
                 </button>
 
-                {/* Fechar */}
+                {/* To close */}
                 <button
                     onClick={() => window.electron.closeWindow()}
                     className="title-bar-button title-bar-button-close"
