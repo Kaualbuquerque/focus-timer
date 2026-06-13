@@ -5,6 +5,7 @@ import { Timer } from "./components/Timer"
 import { TitleBar } from "./components/TitleBar"
 import { HoursPerDay } from "./components/HoursPerDay"
 import { SessionsList } from "./components/SessionsList"
+import { TopGlow } from "./components/TopGlow"
 
 function App() {
 
@@ -41,6 +42,8 @@ function App() {
 
   return (
     <div className="min-h-screen flex flex-col">
+      <TopGlow />
+
       {/* TitleBar */}
       <TitleBar />
 

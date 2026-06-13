@@ -8,5 +8,5 @@
     "strict": true,
     "outDir": "dist-electron"
   },
-  "include": ["src/main/index.ts"]
+  "include": ["src/main/**/*"]
 }

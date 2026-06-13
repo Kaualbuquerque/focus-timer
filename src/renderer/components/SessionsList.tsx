@@ -146,7 +146,7 @@ function DayCard({
                     </div>
 
                     {day.isToday && (
-                        <span className="text-xs uppercase tracking-wider font-semibold bg-primary/15 text-primary px-2 py-1 rounded-full whitespace-nowrap">
+                        <span className="text-xs uppercase tracking-wider font-semibold bg-primary-subtle text-primary px-2 py-1 rounded-full whitespace-nowrap">
                             Hoje
                         </span>
                     )}

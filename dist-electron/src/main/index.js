@@ -1,6 +1,7 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { sessionService } from './services/sessionService.js';
 // Criar __dirname manualmente (ES Modules não tem isso)
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -50,6 +51,32 @@ function createWindow() {
         return mainWindow?.isMaximized() || false;
     });
 }
+app.whenReady().then(async () => {
+    // FOR TESTS
+    try {
+        await sessionService.deleteAllSessions();
+        await sessionService.createSession({
+            dayOfWeek: 1, // Seg
+            startTime: new Date(2024, 5, 10, 10, 0),
+            duration: 2700, // 45 min
+        });
+        await sessionService.createSession({
+            dayOfWeek: 1,
+            startTime: new Date(2024, 5, 10, 14, 30),
+            duration: 6300, // 1h 45min
+        });
+        await sessionService.createSession({
+            dayOfWeek: 2, // Ter
+            startTime: new Date(2024, 5, 11, 9, 30),
+            duration: 4500, // 1h 15min
+        });
+        const sessions = await sessionService.getAllSessions();
+        console.log('Sessões no banco:', sessions);
+    }
+    catch (error) {
+        console.error('Erro ao testar banco:', error);
+    }
+});
 // Quando o Electron terminar de inicializar
 app.whenReady().then(() => {
     createWindow();

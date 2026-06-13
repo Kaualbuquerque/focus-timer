@@ -163,7 +163,6 @@
       inset 0 0 0 1px oklch(0.78 0.16 75 / 0.2);
   }
 
-  /* ✨ CORRIGIDO: Barra vertical com ::before (igual ao timer) */
   .day-card::before {
     content: '';
     position: absolute;
@@ -174,7 +173,6 @@
     background: oklch(0.5 0.08 75 / 0.6);
   }
 
-  /* ✨ Barra para dia atual */
   .day-card.is-today::before {
     background: var(--gradient-primary);
   }
@@ -183,14 +181,12 @@
     @apply flex-1 pl-4;
   }
 
-  /* ✨ Bloco com cor mais clara */
   .day-block {
-    @apply h-11 w-11 rounded-xl flex flex-col items-center justify-center flex-shrink-0 transition-colors;
+    @apply h-11 w-11 rounded-xl flex flex-col items-center justify-center flex-shrink-0 transition-colors font-semibold;
     background-color: var(--card-light);
     color: var(--muted-foreground);
   }
 
-  /* ✨ Bloco para dia atual */
   .day-card.is-today .day-block {
     background-color: var(--primary);
     color: oklch(0.18 0.02 270);
