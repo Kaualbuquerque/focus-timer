@@ -6,39 +6,27 @@ import { TitleBar } from "./components/TitleBar"
 import { HoursPerDay } from "./components/HoursPerDay"
 import { SessionsList } from "./components/SessionsList"
 import { TopGlow } from "./components/TopGlow"
+import { useEffect, useState } from "react"
 
 function App() {
+  const [sessions, setSessions] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
 
-  const mockSessions = [
-    {
-      id: '1',
-      dayOfWeek: 1, // Seg
-      startTime: new Date(2024, 5, 10, 10, 0),
-      duration: 2700, // 45 min
-      completed: true,
-    },
-    {
-      id: '2',
-      dayOfWeek: 1, // Seg
-      startTime: new Date(2024, 5, 10, 14, 30),
-      duration: 6300, // 1h 45min
-      completed: true,
-    },
-    {
-      id: '3',
-      dayOfWeek: 2, // Ter
-      startTime: new Date(2024, 5, 11, 9, 30),
-      duration: 4500, // 1h 15min
-      completed: true,
-    },
-    {
-      id: '4',
-      dayOfWeek: 5, // Ter
-      startTime: new Date(2026, 6, 12, 10, 35),
-      duration: 7500, // 1h 15min
-      completed: true,
+  useEffect(() => {
+    const loadSessions = async () => {
+      try {
+        setLoading(true)
+        const data = await window.electron?.sessions.getAll()
+        console.log('✅ Sessões do banco:', data)
+        setSessions(data || [])
+      } catch (error) {
+        console.error('❌ Erro ao buscar sessões:', error)
+      } finally {
+        setLoading(false)
+      }
     }
-  ]
+    loadSessions()
+  }, [])
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -80,9 +68,12 @@ function App() {
 
           {/* Sessions */}
           <SessionsList
-            sessions={mockSessions}
-            isLoading={false}
-            onDelete={(id) => console.log('Deletar:', id)}
+            sessions={sessions}
+            isLoading={loading}
+            onDelete={(id) => {
+              window.electron?.sessions.delete(id)
+              setSessions(sessions.filter(s => s.id !== id))
+            }}
           />
         </div>
       </main>

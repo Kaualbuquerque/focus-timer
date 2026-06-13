@@ -77,6 +77,60 @@ app.whenReady().then(async () => {
         console.error('Erro ao testar banco:', error);
     }
 });
+ipcMain.handle('sessions:getAll', async () => {
+    try {
+        return await sessionService.getAllSessions();
+    }
+    catch (error) {
+        console.error('Erro ao buscar sessões:', error);
+        throw error;
+    }
+});
+ipcMain.handle('sessions:getWeek', async () => {
+    try {
+        return await sessionService.getWeekSessions();
+    }
+    catch (error) {
+        console.error('Erro ao buscar sessões da semana:', error);
+        throw error;
+    }
+});
+ipcMain.handle('sessions:getByDay', async (_event, dayOfWeek) => {
+    try {
+        return await sessionService.getSessionsByDay(dayOfWeek);
+    }
+    catch (error) {
+        console.error('Erro ao buscar sessões do dia:', error);
+        throw error;
+    }
+});
+ipcMain.handle('sessions:create', async (_event, data) => {
+    try {
+        return await sessionService.createSession(data);
+    }
+    catch (error) {
+        console.error('Erro ao criar sessão:', error);
+        throw error;
+    }
+});
+ipcMain.handle('sessions:delete', async (_event, id) => {
+    try {
+        return await sessionService.deleteSession(id);
+    }
+    catch (error) {
+        console.error('Erro ao deletar sessão:', error);
+        throw error;
+    }
+});
+ipcMain.handle('sessions:update', async (_event, id, data) => {
+    try {
+        return await sessionService.updateSession(id, data);
+    }
+    catch (error) {
+        console.error('Erro ao atualizar sessão:', error);
+        throw error;
+    }
+});
 // Quando o Electron terminar de inicializar
 app.whenReady().then(() => {
     createWindow();
