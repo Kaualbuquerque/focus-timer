@@ -19,6 +19,14 @@ export interface StatCardProps {
     value: string
 }
 
+// HOURS PER DAY
+export interface HoursPerDayProps {
+    sessions?: Array<{
+        dayOfWeek: number
+        duration: number
+    }>
+}
+
 // SESSIONS
 
 export interface Session {

@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const electron_1 = require("electron");
 // Export APIs seguras para o Renderer
-console.log('🟢 Preload script INICIANDO');
 electron_1.contextBridge.exposeInMainWorld('electron', {
     platform: process.platform,
     // Window controls
@@ -19,4 +18,3 @@ electron_1.contextBridge.exposeInMainWorld('electron', {
         update: (id, data) => electron_1.ipcRenderer.invoke('sessions:update', id, data),
     },
 });
-console.log('🟢 Preload script FINALIZADO - electron exposto');

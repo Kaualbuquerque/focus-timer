@@ -7,26 +7,41 @@ import { HoursPerDay } from "./components/HoursPerDay"
 import { SessionsList } from "./components/SessionsList"
 import { TopGlow } from "./components/TopGlow"
 import { useEffect, useState } from "react"
+import { calculateSessionStats, formatMinutes } from "./utils/time"
 
 function App() {
   const [sessions, setSessions] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    const loadSessions = async () => {
-      try {
-        setLoading(true)
-        const data = await window.electron?.sessions.getAll()
-        console.log('✅ Sessões do banco:', data)
-        setSessions(data || [])
-      } catch (error) {
-        console.error('❌ Erro ao buscar sessões:', error)
-      } finally {
-        setLoading(false)
-      }
+  const loadSessions = async () => {
+    try {
+      const data = await window.electron?.sessions.getAll()
+
+      const sessionsWithDates = (data || []).map((session: any) => ({
+        ...session,
+        startTime: new Date(session.startTime),
+        createdAt: new Date(session.createdAt),
+      }))
+
+      console.log('✅ Sessões atualizadas:', sessionsWithDates)
+      setSessions(sessionsWithDates)
+    } catch (error) {
+      console.error('❌ Erro ao buscar sessões:', error)
     }
-    loadSessions()
+  }
+
+  // Carrega sessões na inicialização
+  useEffect(() => {
+    const init = async () => {
+      setLoading(true)
+      await loadSessions()
+      setLoading(false)
+    }
+    init()
   }, [])
+
+  const stats = calculateSessionStats(sessions)
+
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -42,29 +57,29 @@ function App() {
           <Header />
 
           {/* Timer Section */}
-          <Timer />
+          <Timer onSessionSaved={loadSessions} />
 
           {/* Stats Grid */}
           <div className="grid grid-cols-3 gap-4">
             <StatCard
               icon={<Clock size={16} />}
               label="Total da semana"
-              value="0min"
+              value={formatMinutes(stats.totalMinutes)}
             />
             <StatCard
               icon={<TrendingUp size={16} />}
               label="Média por dia ativo (0D)"
-              value="0min"
+              value={formatMinutes(stats.averagePerDay)}
             />
             <StatCard
               icon={<Flame size={16} />}
-              label="Sessões"
-              value="0"
+              label={stats.totalSessions === 1 ? 'Sessão' : 'Sessões'}
+              value={stats.totalSessions.toString()}
             />
           </div>
 
           {/* Graphic */}
-          <HoursPerDay />
+          <HoursPerDay sessions={sessions} />
 
           {/* Sessions */}
           <SessionsList

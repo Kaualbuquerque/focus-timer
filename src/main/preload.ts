@@ -1,7 +1,6 @@
 import { contextBridge, ipcRenderer } from "electron"
 // Export APIs seguras para o Renderer
 
-console.log('🟢 Preload script INICIANDO')
 contextBridge.exposeInMainWorld('electron', {
   platform: process.platform,
 
@@ -24,5 +23,3 @@ contextBridge.exposeInMainWorld('electron', {
     update: (id: string, data: any) => ipcRenderer.invoke('sessions:update', id, data),
   },
 })
-
-console.log('🟢 Preload script FINALIZADO - electron exposto')

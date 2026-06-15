@@ -3,15 +3,15 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 import { sessionService } from './services/sessionService'
 
-// Criar __dirname manualmente (ES Modules não tem isso)
+// Create __dirname manually 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-// Detectar se está em desenvolvimento
+// Detect if it is under development.
 const isDev = !app.isPackaged
 
 function createWindow() {
-    // Criar a janela do navegador
+    // Create the browser window
     const mainWindow = new BrowserWindow({
         width: 1000,
         height: 700,
@@ -28,15 +28,14 @@ function createWindow() {
         titleBarStyle: 'hiddenInset',
     })
 
-    // Carregar a aplicação
+    // Load the application
     if (isDev) {
         mainWindow.loadURL('http://localhost:5173')
-        mainWindow.webContents.openDevTools()
     } else {
         mainWindow.loadFile(path.join(__dirname, '../dist/index.html'))
     }
 
-    // Handlers para IPC(comunicação com Renderer)
+    // Handlers for IPC (communication with the Renderer)
     ipcMain.on('window-minimize', () => {
         mainWindow?.minimize()
     })
@@ -53,42 +52,13 @@ function createWindow() {
         mainWindow?.close()
     })
 
-    // Rastrear estado da janela
+    // Track window status
     ipcMain.handle('is-window-maximized', () => {
         return mainWindow?.isMaximized() || false
     })
 }
 
-app.whenReady().then(async () => {
-    // FOR TESTS
-    try {
-        await sessionService.deleteAllSessions()
-
-        await sessionService.createSession({
-            dayOfWeek: 1, // Seg
-            startTime: new Date(2024, 5, 10, 10, 0),
-            duration: 2700, // 45 min
-        })
-
-        await sessionService.createSession({
-            dayOfWeek: 1,
-            startTime: new Date(2024, 5, 10, 14, 30),
-            duration: 6300, // 1h 45min
-        })
-
-        await sessionService.createSession({
-            dayOfWeek: 2, // Ter
-            startTime: new Date(2024, 5, 11, 9, 30),
-            duration: 4500, // 1h 15min
-        })
-
-        const sessions = await sessionService.getAllSessions()
-        console.log('Sessões no banco:', sessions)
-    } catch (error) {
-        console.error('Erro ao testar banco:', error)
-    }
-})
-
+// Get all sessions from database
 ipcMain.handle('sessions:getAll', async () => {
     try {
         return await sessionService.getAllSessions()
@@ -98,6 +68,7 @@ ipcMain.handle('sessions:getAll', async () => {
     }
 })
 
+// Get sessions from current week
 ipcMain.handle('sessions:getWeek', async () => {
     try {
         return await sessionService.getWeekSessions()
@@ -107,6 +78,7 @@ ipcMain.handle('sessions:getWeek', async () => {
     }
 })
 
+// Get sessions for a specific day of week
 ipcMain.handle('sessions:getByDay', async (_event, dayOfWeek: number) => {
     try {
         return await sessionService.getSessionsByDay(dayOfWeek)
@@ -116,6 +88,7 @@ ipcMain.handle('sessions:getByDay', async (_event, dayOfWeek: number) => {
     }
 })
 
+// Create a new session
 ipcMain.handle('sessions:create', async (_event, data: {
     dayOfWeek: number
     startTime: Date
@@ -129,6 +102,7 @@ ipcMain.handle('sessions:create', async (_event, data: {
     }
 })
 
+// Delete a session by ID
 ipcMain.handle('sessions:delete', async (_event, id: string) => {
     try {
         return await sessionService.deleteSession(id)
@@ -138,6 +112,7 @@ ipcMain.handle('sessions:delete', async (_event, id: string) => {
     }
 })
 
+// Update a session by ID
 ipcMain.handle('sessions:update', async (_event, id: string, data: any) => {
     try {
         return await sessionService.updateSession(id, data)
@@ -146,11 +121,12 @@ ipcMain.handle('sessions:update', async (_event, id: string, data: any) => {
         throw error
     }
 })
-// Quando o Electron terminar de inicializar
+
+// When Electron finishes initializing
 app.whenReady().then(() => {
     createWindow()
 
-    // No macOS, recriar janela quando clicar no dock
+    // On macOS, recreate window when clicking on the dock.
     app.on('activate', () => {
         if (BrowserWindow.getAllWindows().length === 0) {
             createWindow()
@@ -158,7 +134,7 @@ app.whenReady().then(() => {
     })
 })
 
-// Fechar o app quando todas as janelas forem fechadas (exceto macOS)
+// Close the app when all windows are closed (except macOS).
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
         app.quit()

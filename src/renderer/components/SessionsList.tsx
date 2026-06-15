@@ -1,29 +1,5 @@
 import { DaySession, SessionsListProps } from "../types/components"
-
-const DAYS_FULL = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado']
-const DAYS_SHORT = ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB']
-
-// Format duration (seconds → Xh or Xmin or Xh Xmin)
-const formatDuration = (seconds: number): string => {
-    const hours = Math.floor(seconds / 3600)
-    const minutes = Math.floor((seconds % 3600) / 60)
-
-    if (hours > 0 && minutes > 0) {
-        return `${hours}.${Math.round((minutes / 60) * 10)}h`
-    }
-    if (hours > 0) {
-        return `${hours}h`
-    }
-    return `${minutes}min`
-}
-
-// Format time (Date → HH:MM)
-const formatTime = (date: Date): string => {
-    return `${date.getHours().toString().padStart(2, '0')}:${date
-        .getMinutes()
-        .toString()
-        .padStart(2, '0')}`
-}
+import { DAYS_FULL, DAYS_SHORT, formatDuration, formatTime } from "../utils/time"
 
 export function SessionsList({ sessions = [], isLoading = false, onDelete }: SessionsListProps) {
     const today = new Date().getDay()

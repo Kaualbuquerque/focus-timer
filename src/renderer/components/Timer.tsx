@@ -1,24 +1,11 @@
 import { useEffect, useRef, useState } from "react"
-import { TimerState } from "../types/components"
 import { Pause, Play, RefreshCcw } from "lucide-react"
+import { formatTimeDisplay } from "../utils/time"
 
-export function Timer() {
+export function Timer({ onSessionSaved }: { onSessionSaved?: () => void }) {
     const [totalSeconds, setTotalSeconds] = useState(0)
     const [isRunning, setIsRunning] = useState(false)
     const intervalRef = useRef<number | null>(null)
-
-    // Formatar tempo para HH:MM:SS
-    const formatTime = (secondsTotal: number): TimerState => {
-        const hours = Math.floor(secondsTotal / 3600)
-        const minutes = Math.floor((secondsTotal % 3600) / 60)
-        const seconds = secondsTotal % 60
-
-        return {
-            hours: hours.toString().padStart(2, '0'),
-            minutes: minutes.toString().padStart(2, '0'),
-            seconds: seconds.toString().padStart(2, '0'),
-        }
-    }
 
     // Iniciar/Parar o intervalo
     useEffect(() => {
@@ -47,14 +34,30 @@ export function Timer() {
 
     const handlePause = () => {
         setIsRunning(false)
+
     }
 
-    const handleReset = () => {
+    const handleReset = async () => {
         setIsRunning(false)
+
+        if (totalSeconds > 0) {
+            try {
+                await window.electron?.sessions.create({
+                    dayOfWeek: new Date().getDay(),
+                    startTime: new Date(Date.now() - totalSeconds * 1000),
+                    duration: totalSeconds,
+                })
+                console.log('✅ Sessão salva!')
+                await onSessionSaved?.()
+            } catch (error) {
+                console.error('❌ Erro ao salvar sessão:', error)
+            }
+        }
+
         setTotalSeconds(0)
     }
 
-    const time = formatTime(totalSeconds)
+    const time = formatTimeDisplay(totalSeconds)
 
 
     return (
