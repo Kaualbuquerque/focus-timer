@@ -72,20 +72,6 @@ export const calculateHoursByDay = (sessions: any[]) => {
     return result
 }
 
-export const formatDuration = (seconds: number): string => {
-    const totalMinutes = secondsToMinutes(seconds)
-    const hours = Math.floor(totalMinutes / 60)
-    const minutes = Math.floor(totalMinutes % 60)
-
-    if (hours > 0 && minutes > 0) {
-        return `${hours}.${Math.round((minutes / 60) * 10)}h`
-    }
-    if (hours > 0) {
-        return `${hours}h`
-    }
-    return `${minutes}min`
-}
-
 export const formatTime = (date: Date): string => {
     return `${date.getHours().toString().padStart(2, '0')}:${date
         .getMinutes()

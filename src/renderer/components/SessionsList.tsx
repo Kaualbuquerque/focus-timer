@@ -1,5 +1,5 @@
 import { DaySession, SessionsListProps } from "../types/components"
-import { DAYS_FULL, DAYS_SHORT, formatDuration, formatTime } from "../utils/time"
+import { DAYS_FULL, DAYS_SHORT, formatMinutes, formatTime, secondsToMinutes } from "../utils/time"
 
 export function SessionsList({ sessions = [], isLoading = false, onDelete }: SessionsListProps) {
     const today = new Date().getDay()
@@ -105,7 +105,7 @@ function DayCard({
                     </div>
 
                     <div className="text-xl font-semibold text-foreground font-mono">
-                        {formatDuration(day.totalDuration)}
+                        {formatMinutes(secondsToMinutes(day.totalDuration))}
                     </div>
 
                     <div
@@ -143,7 +143,7 @@ function DayCard({
                             </span>
                             <div className="session-pill-divider" />
                             <span className="session-pill-duration">
-                                {formatDuration(session.duration)}
+                                {formatMinutes(secondsToMinutes(session.duration))}
                             </span>
                             <button
                                 onClick={() => onDelete?.(session.id)}
