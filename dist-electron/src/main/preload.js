@@ -1,20 +1,20 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const electron_1 = require("electron");
+const { contextBridge, ipcRenderer } = require("electron");
 // Export APIs seguras para o Renderer
-electron_1.contextBridge.exposeInMainWorld('electron', {
+contextBridge.exposeInMainWorld('electron', {
     platform: process.platform,
     // Window controls
-    minimizeWindow: () => electron_1.ipcRenderer.send('window-minimize'),
-    maximizeWindow: () => electron_1.ipcRenderer.send('window-maximize'),
-    closeWindow: () => electron_1.ipcRenderer.send('window-close'),
-    isWindowMaximized: () => electron_1.ipcRenderer.invoke('is-window-maximized'),
+    minimizeWindow: () => ipcRenderer.send('window-minimize'),
+    maximizeWindow: () => ipcRenderer.send('window-maximize'),
+    closeWindow: () => ipcRenderer.send('window-close'),
+    isWindowMaximized: () => ipcRenderer.invoke('is-window-maximized'),
     sessions: {
-        getAll: () => electron_1.ipcRenderer.invoke('sessions:getAll'),
-        getWeek: () => electron_1.ipcRenderer.invoke('sessions:getWeek'),
-        getByDay: (dayOfWeek) => electron_1.ipcRenderer.invoke('sessions:getByDay', dayOfWeek),
-        create: (data) => electron_1.ipcRenderer.invoke('sessions:create', data),
-        delete: (id) => electron_1.ipcRenderer.invoke('sessions:delete', id),
-        update: (id, data) => electron_1.ipcRenderer.invoke('sessions:update', id, data),
+        getAll: () => ipcRenderer.invoke('sessions:getAll'),
+        getWeek: () => ipcRenderer.invoke('sessions:getWeek'),
+        getByDay: (dayOfWeek) => ipcRenderer.invoke('sessions:getByDay', dayOfWeek),
+        create: (data) => ipcRenderer.invoke('sessions:create', data),
+        delete: (id) => ipcRenderer.invoke('sessions:delete', id),
+        update: (id, data) => ipcRenderer.invoke('sessions:update', id, data),
     },
 });

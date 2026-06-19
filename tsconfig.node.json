@@ -2,11 +2,13 @@
   "compilerOptions": {
     "composite": true,
     "skipLibCheck": true,
-    "module": "ESNext",
-    "moduleResolution": "bundler",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
     "allowSyntheticDefaultImports": true,
     "strict": true,
-    "outDir": "dist-electron"
+    "outDir": "dist-electron",
+    "lib": ["ES2020"],
+    "types": ["node"],
   },
   "include": ["src/main/**/*"]
 }

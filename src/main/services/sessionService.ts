@@ -1,4 +1,4 @@
-import prisma from "../prisma"
+const prisma = require('../prisma.js')
 
 export const sessionService = {
     // Create new session
@@ -72,3 +72,5 @@ export const sessionService = {
         return await prisma!.session.deleteMany()
     },
 }
+
+module.exports = { sessionService }

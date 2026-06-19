@@ -1,23 +1,14 @@
-import { PrismaClient } from '@prisma/client'
+const { PrismaClient } = require('@prisma/client')
 
-declare global {
-    var prisma: PrismaClient | undefined
-}
-
-let prisma: PrismaClient | undefined
+let prisma
 
 if (process.env.NODE_ENV === 'production') {
     prisma = new PrismaClient()
 } else {
-    if (!global.prisma) {
-        global.prisma = new PrismaClient()
+    if (!(globalThis as any).prisma) {
+        (globalThis as any).prisma = new PrismaClient()
     }
-    prisma = global.prisma
+    prisma = (globalThis as any).prisma
 }
 
-// ✨ Garantir que nunca é undefined ao exportar
-if (!prisma) {
-    throw new Error('Prisma não foi inicializado')
-}
-
-export default prisma
+module.exports = prisma

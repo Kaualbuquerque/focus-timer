@@ -2,11 +2,12 @@
   "compilerOptions": {
     "composite": true,
     "skipLibCheck": true,
-    "module": "CommonJS",
-    "moduleResolution": "bundler",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "outDir": "dist-electron",
+    "types": ["node"],
   },
   "include": ["src/main/preload.ts"]
 }
