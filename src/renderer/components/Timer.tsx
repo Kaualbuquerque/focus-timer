@@ -6,36 +6,48 @@ export function Timer({ onSessionSaved }: { onSessionSaved?: () => void }) {
     const [totalSeconds, setTotalSeconds] = useState(0)
     const [isRunning, setIsRunning] = useState(false)
     const intervalRef = useRef<number | null>(null)
+    const startTimestampRef = useRef<number | null>(null)
+    const accumulatedSecondsRef = useRef(0)
 
     // Iniciar/Parar o intervalo
     useEffect(() => {
         if (isRunning) {
+            // It marks the exact moment when counting began.
+            startTimestampRef.current = Date.now()
+
             intervalRef.current = window.setInterval(() => {
-                setTotalSeconds(prev => prev + 1)
+                // It calculates based on actual elapsed time.
+                const elapsedSinceStart = Math.floor(
+                    (Date.now() - startTimestampRef.current!) / 1000
+                )
+                setTotalSeconds(accumulatedSecondsRef.current + elapsedSinceStart)
             }, 1000)
         } else {
             if (intervalRef.current) {
                 clearInterval(intervalRef.current)
                 intervalRef.current = null
             }
+
+            // When paused, the elapsed time is added to the accumulated time.
+            if (startTimestampRef.current) {
+                const elapsedSinceStart = Math.floor(
+                    (Date.now() - startTimestampRef.current) / 1000
+                )
+                accumulatedSecondsRef.current += elapsedSinceStart
+                startTimestampRef.current = null
+            }
         }
 
-        // Cleanup
         return () => {
-            if (intervalRef.current) {
-                clearInterval(intervalRef.current)
-            }
+            if (intervalRef.current) clearInterval(intervalRef.current)
         }
     }, [isRunning])
 
-    const handleStart = () => {
-        setIsRunning(true)
-    }
+    const handleStart = () => setIsRunning(true)
 
-    const handlePause = () => {
-        setIsRunning(false)
 
-    }
+    const handlePause = () => setIsRunning(false)
+
 
     const handleReset = async () => {
         setIsRunning(false)
@@ -47,14 +59,15 @@ export function Timer({ onSessionSaved }: { onSessionSaved?: () => void }) {
                     startTime: new Date(Date.now() - totalSeconds * 1000),
                     duration: totalSeconds,
                 })
-                console.log('✅ Sessão salva!')
-                await onSessionSaved?.()
+                onSessionSaved?.()
             } catch (error) {
-                console.error('❌ Erro ao salvar sessão:', error)
+                console.error('Erro ao salvar sessão:', error)
             }
         }
 
         setTotalSeconds(0)
+        accumulatedSecondsRef.current = 0
+        startTimestampRef.current = null
     }
 
     const time = formatTimeDisplay(totalSeconds)
