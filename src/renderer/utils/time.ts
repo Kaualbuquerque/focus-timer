@@ -1,3 +1,5 @@
+import { Session } from "../types/components"
+
 export const DAYS_FULL = [
     'Domingo',
     'Segunda-feira',
@@ -7,6 +9,20 @@ export const DAYS_FULL = [
     'Sexta-feira',
     'Sábado',
 ]
+
+export const MONTHS = [
+    'jan.',
+    'fev.',
+    'mar.',
+    'abr.',
+    'mai.',
+    'jun.',
+    'jul.',
+    'ago.',
+    'set.',
+    'out.',
+    'nov.',
+    'dez.']
 
 export const DAYS_SHORT = ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB']
 export const DAYS = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']
@@ -28,7 +44,7 @@ export const formatMinutes = (minutes: number): string => {
 }
 
 
-export const calculateSessionStats = (sessions: any[]) => {
+export const calculateSessionStats = (sessions: Session[]) => {
     if (sessions.length === 0) {
         return {
             totalMinutes: 0,
@@ -54,7 +70,7 @@ export const calculateSessionStats = (sessions: any[]) => {
     }
 }
 
-export const calculateHoursByDay = (sessions: any[]) => {
+export const calculateHoursByDay = (sessions: Session[]) => {
     const minutesByDay: { [key: number]: number } = {
         0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0
     }
@@ -90,4 +106,34 @@ export const formatTimeDisplay = (secondsTotal: number) => {
         minutes: minutes.toString().padStart(2, '0'),
         seconds: seconds.toString().padStart(2, '0'),
     }
+}
+
+export const groupSessionsByWeek = (sessions: Session[]) => {
+    const weeks: { [key: string]: any[] } = {}
+
+    sessions.forEach(session => {
+        const date = new Date(session.startTime)
+
+        const sunday = new Date(date)
+        sunday.setDate(date.getDate() - date.getDay())
+        sunday.setHours(0, 0, 0, 0)
+
+        const key = sunday.toISOString()
+
+        if (!weeks[key]) {
+            weeks[key] = []
+        }
+        weeks[key].push(session)
+    })
+
+    return Object.entries(weeks)
+        .map(([key, sessions]) => {
+            const weekStart = new Date(key)
+            const weekEnd = new Date(weekStart)
+            weekEnd.setDate(weekStart.getDate() + 6)
+            weekEnd.setHours(23, 59, 59, 999)
+
+            return { weekStart, weekEnd, sessions }
+        })
+        .sort((a, b) => b.weekStart.getTime() - a.weekStart.getTime())
 }

@@ -1,29 +1,8 @@
-import { Minus, Square, X } from "lucide-react"
+import { History, Minus, Square, X } from "lucide-react"
 import { useEffect, useState } from "react"
+import { TitleBarProps } from "../types/components"
 
-declare global {
-    interface Window {
-        electron: {
-            platform: string
-
-            sessions: {
-                getAll: () => Promise<any[]>
-                getWeek: () => Promise<any[]>
-                getByDay: (dayOfWeek: number) => Promise<any[]>
-                create: (data: any) => Promise<any>
-                delete: (id: string) => Promise<void>
-                update: (id: string, data: any) => Promise<any>
-            }
-
-            minimizeWindow: () => void
-            maximizeWindow: () => void
-            closeWindow: () => void
-            isWindowMaximized: () => Promise<boolean>
-        }
-    }
-}
-
-export function TitleBar() {
+export function TitleBar({ onHistoryClick, currentPage }: TitleBarProps) {
     const [isMaximized, setIsMaximized] = useState(false)
 
     useEffect(() => {
@@ -48,8 +27,24 @@ export function TitleBar() {
     return (
         <div className="title-bar" style={{ WebkitAppRegion: 'drag' } as React.CSSProperties}>
             <div className="title-bar-left">
-                {/* Space for logo */}
+                <span className="text-sm font-medium text-foreground">Focus Timer</span>
             </div>
+
+            <button
+                onClick={onHistoryClick}
+                className="title-bar-button"
+                title="Histórico"
+                style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties}
+            >
+                <History
+                    size={16}
+                    className={
+                        currentPage === 'history' || currentPage === 'week-detail'
+                            ? 'text-primary'
+                            : ''
+                    }
+                />
+            </button>
 
             <div className="title-bar-right">
                 {/* Minimize */}

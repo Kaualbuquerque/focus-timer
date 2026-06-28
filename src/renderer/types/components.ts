@@ -35,6 +35,7 @@ export interface Session {
     startTime: Date
     duration: number
     completed: boolean
+    createdAt: Date
 }
 
 export interface SessionsListProps {
@@ -53,4 +54,26 @@ export interface DaySession {
     sessions: Session[]
     isToday: boolean
     progressPercentage: number
+}
+
+// PAGE TYPES
+export type Page = 'home' | 'history' | 'week-detail'
+
+export interface WeekData {
+    weekStart: Date
+    weekEnd: Date
+    sessions: Session[]
+}
+
+// TITLEBAR
+export interface TitleBarProps {
+    onHistoryClick: () => void
+    currentPage: Page
+}
+
+// HISTORY PAGE
+
+export interface historyPageProps {
+    onBack: () => void
+    onWeekSelect: (week: WeekData) => void
 }

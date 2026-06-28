@@ -8,22 +8,27 @@ import { SessionsList } from "./components/SessionsList"
 import { TopGlow } from "./components/TopGlow"
 import { useEffect, useState } from "react"
 import { calculateSessionStats, formatMinutes } from "./utils/time"
+import { Page, Session, WeekData } from "./types/components"
+import { HistoryPage } from "./components/HistoryPage"
+
 
 function App() {
   const [sessions, setSessions] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
 
+  const [currentPage, setCurrentPage] = useState<Page>('home')
+  const [selectedWeek, setSelectedWeek] = useState<WeekData | null>(null)
+
   const loadSessions = async () => {
     try {
-      const data = await window.electron?.sessions.getAll()
+      const data = await window.electron?.sessions.getWeek()
 
-      const sessionsWithDates = (data || []).map((session: any) => ({
+      const sessionsWithDates = (data || []).map((session: Session) => ({
         ...session,
         startTime: new Date(session.startTime),
         createdAt: new Date(session.createdAt),
       }))
 
-      console.log('✅ Sessões atualizadas:', sessionsWithDates)
       setSessions(sessionsWithDates)
     } catch (error) {
       console.error('❌ Erro ao buscar sessões:', error)
@@ -40,18 +45,31 @@ function App() {
     init()
   }, [])
 
-  const stats = calculateSessionStats(sessions)
+  const handleWeekSelect = (week: WeekData) => {
+    setSelectedWeek(week)
+    setCurrentPage('week-detail')
+  }
 
+  const renderPage = () => {
+    if (currentPage === 'history') {
+      return (
+        <p>
+          <HistoryPage
+            onBack={() => setCurrentPage('home')}
+            onWeekSelect={handleWeekSelect}
+          />
+        </p>
+      )
+    }
 
-  return (
-    <div className="min-h-screen flex flex-col">
-      <TopGlow />
+    if (currentPage === 'week-detail' && selectedWeek) {
+      <p>
+        week-detail
+      </p>
+    }
 
-      {/* TitleBar */}
-      <TitleBar />
-
-      {/* Main Content */}
-      <main className="flex-1 flex items-center justify-center p-8 overflow-y-auto">
+    return (
+      < main className="flex-1 flex items-center justify-center p-8 overflow-y-auto" >
         <div className="w-full max-w-screen-lg flex flex-col gap-4">
           {/* Header */}
           <Header />
@@ -68,7 +86,7 @@ function App() {
             />
             <StatCard
               icon={<TrendingUp size={16} />}
-              label="Média por dia ativo (0D)"
+              label="Média por dia ativo"
               value={formatMinutes(stats.averagePerDay)}
             />
             <StatCard
@@ -91,7 +109,24 @@ function App() {
             }}
           />
         </div>
-      </main>
+      </main >
+    )
+  }
+
+  const stats = calculateSessionStats(sessions)
+
+
+  return (
+    <div className="min-h-screen flex flex-col">
+      <TopGlow />
+
+      {/* TitleBar */}
+      <TitleBar
+        onHistoryClick={() => setCurrentPage('history')}
+        currentPage={currentPage}
+      />
+
+      {renderPage()}
     </div>
   )
 }
