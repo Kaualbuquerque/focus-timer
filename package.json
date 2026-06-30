@@ -1,6 +1,6 @@
 {
   "name": "focus-timer",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "main": "dist-electron/src/main/index.js",
   "scripts": {
     "dev:vite": "vite",

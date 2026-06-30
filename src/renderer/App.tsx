@@ -9,7 +9,8 @@ import { TopGlow } from "./components/TopGlow"
 import { useEffect, useState } from "react"
 import { calculateSessionStats, formatMinutes } from "./utils/time"
 import { Page, Session, WeekData } from "./types/components"
-import { HistoryPage } from "./components/HistoryPage"
+import { HistoryPage } from "./pages/HistoryPage"
+import { WeekDatailPage } from "./pages/WeekDetailPage"
 
 
 function App() {
@@ -62,10 +63,13 @@ function App() {
       )
     }
 
-    if (currentPage === 'week-detail' && selectedWeek) {
-      <p>
-        week-detail
-      </p>
+    if (currentPage === 'week-detail') {
+      return (<p>
+        <WeekDatailPage
+          week={selectedWeek!}
+          onBack={() => setCurrentPage('history')}
+        />
+      </p>)
     }
 
     return (

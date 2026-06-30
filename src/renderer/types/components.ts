@@ -77,3 +77,9 @@ export interface historyPageProps {
     onBack: () => void
     onWeekSelect: (week: WeekData) => void
 }
+
+// WEEK DATAIL
+export interface WeekDatailPageProps {
+    week: WeekData
+    onBack: () => void
+}

@@ -1,5 +1,5 @@
 import { DaySession, SessionsListProps } from "../types/components"
-import { DAYS_FULL, DAYS_SHORT, formatMinutes, formatTime, secondsToMinutes } from "../utils/time"
+import { DAYS, DAYS_FULL, formatMinutes, formatTime, secondsToMinutes } from "../utils/time"
 
 export function SessionsList({ sessions = [], isLoading = false, onDelete }: SessionsListProps) {
     const today = new Date().getDay()
@@ -12,7 +12,7 @@ export function SessionsList({ sessions = [], isLoading = false, onDelete }: Ses
         return {
             dayIndex: i,
             dayName: DAYS_FULL[i],
-            dayShort: DAYS_SHORT[i],
+            dayShort: DAYS[i],
             dayNumber: getDayNumber(i),
             totalDuration,
             sessionCount: daySessions.length,

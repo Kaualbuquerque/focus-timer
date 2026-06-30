@@ -22,9 +22,24 @@ export const MONTHS = [
     'set.',
     'out.',
     'nov.',
-    'dez.']
+    'dez.'
+]
 
-export const DAYS_SHORT = ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB']
+export const MONTHS_FULL = [
+    'janeiro',
+    'fevereiro',
+    'março',
+    'abril',
+    'maio',
+    'junho',
+    'julho',
+    'agosto',
+    'setembro',
+    'outubro',
+    'novembro',
+    'dezembro'
+]
+
 export const DAYS = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']
 
 export const secondsToMinutes = (seconds: number): number => {
@@ -33,6 +48,13 @@ export const secondsToMinutes = (seconds: number): number => {
 
 export const secondsToHours = (seconds: number): number => {
     return seconds / 3600
+}
+
+export const formatDateFull = (date: Date) => {
+    return `${date.getDate()} de ${MONTHS_FULL[date.getMonth()]} de ${date.getFullYear()}`
+}
+export const formatWeekRange = (start: Date, end: Date) => {
+    return `${formatDateFull(start)} → ${formatDateFull(end)}`
 }
 
 export const formatMinutes = (minutes: number): string => {
